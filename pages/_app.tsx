@@ -1,8 +1,9 @@
 import "../styles/globals.css"
-import { NextUIProvider } from "@nextui-org/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import { AppProps } from "next/app"
 import { Session } from "next-auth"
 import { SessionProvider } from "next-auth/react"
+import Layout from "../components/Layout"
 
 const App = ({
     Component,
@@ -11,11 +12,13 @@ const App = ({
     session: Session
 }>) => {
     return (
-        <NextUIProvider>
+        <ChakraProvider>
             <SessionProvider session={session}>
-                <Component {...pageProps} />
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
             </SessionProvider>
-        </NextUIProvider>
+        </ChakraProvider>
     )
 }
 
