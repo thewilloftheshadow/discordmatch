@@ -25,7 +25,7 @@ import {
     Button,
     textDecoration,
 } from "@chakra-ui/react"
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
+import { FiHome, FiLink, FiCompass, FiStar, FiSettings, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
 import { IconType } from "react-icons"
 import { ReactText } from "react"
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -38,7 +38,7 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", icon: FiHome, linkTo: "/" },
-    //{ name: "Trending", icon: FiTrendingUp, linkTo: "/nothing" },
+    { name: "Create a Link", icon: FiLink, linkTo: "/link/create" },
     { name: "My Matches", icon: FiCompass },
     // { name: "Favorites", icon: FiStar },
     // { name: "Settings", icon: FiSettings },
@@ -194,7 +194,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                             </MenuList>
                         </Menu>
                     ) : (
-                        <Button onClick={() => signIn()}>Sign in</Button>
+                        <Button onClick={() => signIn("discord")}>Sign in</Button>
                     )}
                 </Flex>
             </HStack>

@@ -10,16 +10,22 @@ datasource db {
 }
 
 model User {
-    id        String      @id
-    shareCodes ShareCode[]
-    email     String      @unique
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id          String      @id
+    email       String      @unique
+    avatar      String
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    sharedCodes ShareCode[] @relation(name: "sharedCodes")
+    linkedCodes ShareCode[] @relation(name: "linkedCodes")
 }
 
 model ShareCode {
-    sharedBy   User   @relation(fields: [sharedById], references: [id])
+    sharedBy   User    @relation(name: "sharedCodes", fields: [sharedById], references: [id])
     sharedById String
-    code       String @id @default(cuid())
+    code       String  @id @default(cuid())
+    linkedTo   User?   @relation(name: "linkedCodes", fields: [linkedToId], references: [id])
+    linkedToId String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

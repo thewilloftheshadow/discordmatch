@@ -1,27 +1,40 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { User } from "next-auth"
 import { unstable_getServerSession } from "next-auth/next"
-import { APIError } from "../../../types"
+import { APIError, MatchUser } from "../../../types"
 import { authOptions } from "../auth/[...nextauth]"
 
 import prisma from "../../../lib/prisma"
+import { ShareCode, User } from "@prisma/client"
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<User | APIError>) => {
+const getUser = async (req: NextApiRequest, res: NextApiResponse): Promise<boolean | null | MatchUser> => {
     const session = await unstable_getServerSession(req, res, authOptions)
-    if (!session || !session?.user) {
-        res.status(401).send({
-            message: "You must be signed in to view the protected content on this page.",
-        })
-    }
+    if (!session || !session?.user) return false
 
-	const user = await prisma.user.findUnique({
-		where: {
-			email: `${session!.user!.email}`,
-		},
-		include: {
-			shareCodes: true,
-		}
-	})
+    const user = await prisma.user.findUnique({
+        where: {
+            email: `${session!.user!.email}`,
+        },
+        include: {
+            sharedCodes: true,
+            linkedCodes: true,
+        },
+    })
+    if (!user) return null
+    return user
+}
+
+const handler = async (req: NextApiRequest, res: NextApiResponse<MatchUser | APIError>) => {
+    const userData = await getUser(req, res)
+    if (userData === false) {
+        res.redirect("/api/auth/signin")
+    }
+    if (userData === null) {
+        res.status(404).send({ message: "User not found" })
+    }
+    const user = userData as MatchUser
+    if (user) res.status(200).json(user)
+    else res.status(404).send({ message: "User not found" })
 }
 
 export default handler
+export { getUser }
