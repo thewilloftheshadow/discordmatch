@@ -4,6 +4,8 @@ import { unstable_getServerSession } from "next-auth/next"
 import { APIError } from "../../../types"
 import { authOptions } from "../auth/[...nextauth]"
 
+import prisma from "../../../lib/prisma"
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<User | APIError>) => {
     const session = await unstable_getServerSession(req, res, authOptions)
     if (!session || !session?.user) {
@@ -16,6 +18,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<User | APIError
 		where: {
 			email: `${session!.user!.email}`,
 		},
+		include: {
+			shareCodes: true,
+		}
 	})
 }
 

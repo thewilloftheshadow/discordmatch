@@ -11,7 +11,8 @@ datasource db {
 
 model User {
     id        String      @id
-    ShareCode ShareCode[]
+    shareCodes ShareCode[]
+    email     String      @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -21,11 +22,4 @@ model ShareCode {
     sharedBy   User   @relation(fields: [sharedById], references: [id])
     sharedById String
     code       String @id @default(cuid())
-}
-
-model State {
-    id        String   @id @default(cuid())
-    route     String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 }
