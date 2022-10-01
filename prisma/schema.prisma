@@ -1,24 +1,31 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
+    referentialIntegrity = "prisma"
 }
 
 model User {
-  id String @id
-  ShareCode ShareCode[]
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        String      @id
+    ShareCode ShareCode[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model ShareCode {
-  sharedBy   User   @relation(fields: [sharedById], references: [id])
-  sharedById String
-  code       String @id @default(cuid())
+    sharedBy   User   @relation(fields: [sharedById], references: [id])
+    sharedById String
+    code       String @id @default(cuid())
+}
+
+model State {
+    id        String   @id @default(cuid())
+    route     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
