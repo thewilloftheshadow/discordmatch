@@ -38,10 +38,10 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", icon: FiHome, linkTo: "/" },
-    { name: "Trending", icon: FiTrendingUp, linkTo: "/nothing" },
-    { name: "Explore", icon: FiCompass },
-    { name: "Favourites", icon: FiStar },
-    { name: "Settings", icon: FiSettings },
+    //{ name: "Trending", icon: FiTrendingUp, linkTo: "/nothing" },
+    { name: "My Matches", icon: FiCompass },
+    // { name: "Favorites", icon: FiStar },
+    // { name: "Settings", icon: FiSettings },
 ]
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -174,7 +174,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                                 <HStack>
                                     <Avatar size={"sm"} src={session.user.image ?? ""} />
                                     <VStack display={{ base: "none", md: "flex" }} alignItems="flex-start" spacing="1px" ml="2">
-                                        <Text fontSize="sm">Justina Clark</Text>
+                                        <Text fontSize="sm">{session.user.name}</Text>
                                         <Text fontSize="xs" color="gray.600">
                                             Admin
                                         </Text>
