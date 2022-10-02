@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
                         id: user.id,
                         email: user.email,
 						avatar: user.image || "",
+						name: user.name || "",
                     },
                 })
             }
@@ -38,7 +39,12 @@ export const authOptions: NextAuthOptions = {
                     id: token.sub!,
                     email: session.user!.email!,
 					avatar: session.user!.image || "",
+					name: session.user!.name || "",
                 },
+				include: {
+					linkedCodes: true,
+					sharedCodes: true
+				}
             })
             session.userData = userData
             return session

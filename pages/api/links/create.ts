@@ -4,7 +4,7 @@ import { APIError, MatchUser } from "../../../types"
 import { authOptions } from "../auth/[...nextauth]"
 
 import prisma from "../../../lib/prisma"
-import { ShareCode, User } from "@prisma/client"
+import { Link, User } from "@prisma/client"
 
 import { getUser } from "../user/me"
 
@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<{code: string} 
     if (!userData) return res.status(401).send({ message: "Unauthorized" })
     const user = userData as MatchUser
 
-    const code = await prisma.shareCode.create({
+    const code = await prisma.link.create({
         data: {
             sharedBy: {
                 connect: {

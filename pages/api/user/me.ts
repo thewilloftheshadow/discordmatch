@@ -4,7 +4,7 @@ import { APIError, MatchUser } from "../../../types"
 import { authOptions } from "../auth/[...nextauth]"
 
 import prisma from "../../../lib/prisma"
-import { ShareCode, User } from "@prisma/client"
+import { Link, User } from "@prisma/client"
 
 const getUser = async (req: NextApiRequest, res: NextApiResponse): Promise<boolean | null | MatchUser> => {
     const session = await unstable_getServerSession(req, res, authOptions)

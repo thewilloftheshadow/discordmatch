@@ -20,7 +20,7 @@ export default function Page(props: props) {
     const [code, setCode] = useState({ code: null })
 
     useEffect(() => {
-        fetch("/api/sharecodes/create")
+        fetch("/api/links/create")
             .then((res) => {
                 console.log(res)
                 return res.json()
@@ -35,17 +35,12 @@ export default function Page(props: props) {
                 <title>Discord Match</title>
             </Head>
             <main>
-                <Text>Your link has been generated! Use it to share with another person!</Text>
-                <Text>Note: Your link can only be used once!</Text>
-                {code.code ? (
-                    <>
-                        <Link href={`${props.baseURL}/link/${code.code}`}>{`${props.baseURL}/link/${code.code}`}</Link>
-                    </>
-                ) : (
-                    <Skeleton>
-                        <Text>Generating link...</Text>
-                    </Skeleton>
-                )}
+                <Skeleton isLoaded={code.code ? true : false}>
+                    <Text>Your link has been generated! Use it to share with another person!</Text>
+                    <Text>Note: Your link can only be used once!</Text>
+
+                    <Link href={`${props.baseURL}/link/join/${code.code}`}>{`${props.baseURL}/link/join/${code.code}`}</Link>
+                </Skeleton>
             </main>
         </div>
     )

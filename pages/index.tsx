@@ -11,7 +11,7 @@ export default function Page() {
             </Head>
             <main>
                 <h1>Coming soon to a web near you</h1>
-                <p>{JSON.stringify(session.data)}</p>
+                <p>{JSON.stringify(session)}</p>
             </main>
         </div>
     )
