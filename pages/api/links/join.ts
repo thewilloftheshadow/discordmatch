@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<boolean | APIEr
             },
         },
     })
-    if (done) return res.status(200).json({})
+    if (done) return res.status(200).send(true)
     else return res.status(404).send({ message: "Invite link not found" })
 }
 
