@@ -24,6 +24,7 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse): Promise<boole
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<MatchUser | APIError>) => {
+	if(req.method !== "GET") return res.status(405).send({ message: "Method not allowed" })
     const userData = await getUser(req, res)
     if (userData === false) {
         res.redirect("/api/auth/signin")

@@ -20,7 +20,9 @@ export default function Page(props: props) {
     const [code, setCode] = useState({ code: null })
 
     useEffect(() => {
-        fetch("/api/links/create")
+        fetch("/api/links/create", {
+            method: "POST",
+        })
             .then((res) => {
                 console.log(res)
                 return res.json()

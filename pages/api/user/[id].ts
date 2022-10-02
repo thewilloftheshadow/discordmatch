@@ -8,6 +8,7 @@ const handler = async (
     req: NextApiRequest,
     res: NextApiResponse<User | APIError>
 ) => {
+	if(req.method !== "GET") return res.status(405).send({ message: "Method not allowed" })
     const { id } = req.query
     if (typeof id !== "string") res.status(400).json({ message: "Invalid id" })
     const user = await prisma.user.findUnique({
