@@ -26,7 +26,7 @@ import {
     Skeleton,
     SkeletonCircle,
 } from "@chakra-ui/react"
-import { SkipNavLink, SkipNavContent } from '@chakra-ui/skip-nav'
+import { SkipNavLink, SkipNavContent } from "@chakra-ui/skip-nav"
 import { FiHome, FiLink, FiCompass, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
 import { IconType } from "react-icons"
 import { ReactText } from "react"
@@ -51,30 +51,31 @@ const LinkItems: Array<LinkItemProps> = [
 export default function Layout({ children }: { children: ReactNode }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
-		<>
-		<SkipNavLink />
-        <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
-            <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
-            <Drawer
-                autoFocus={false}
-                isOpen={isOpen}
-                placement="left"
-                onClose={onClose}
-                returnFocusOnClose={false}
-                onOverlayClick={onClose}
-                size="full"
-            >
-                <DrawerContent>
-                    <SidebarContent onClose={onClose} />
-                </DrawerContent>
-            </Drawer>
-            {/* mobilenav */}
-            <MobileNav onOpen={onOpen} />
-			<SkipNavContent />
-            <Box ml={{ base: 0, md: 60 }} p="4">
-                {children}
+        <>
+            <SkipNavLink />
+            <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+                <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
+                <Drawer
+                    autoFocus={false}
+                    isOpen={isOpen}
+                    placement="left"
+                    onClose={onClose}
+                    returnFocusOnClose={false}
+                    onOverlayClick={onClose}
+                    size="full"
+                >
+                    <DrawerContent>
+                        <SidebarContent onClose={onClose} />
+                    </DrawerContent>
+                </Drawer>
+                {/* mobilenav */}
+                <MobileNav onOpen={onOpen} />
+                <SkipNavContent />
+                <Box ml={{ base: 0, md: 60 }} p="4">
+                    {children}
+                </Box>
             </Box>
-        </Box></>
+        </>
     )
 }
 
@@ -201,11 +202,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                     icon={colorMode === "light" ? <FiMoon /> : <FiSun />}
                 />
                 <Flex alignItems={"center"} zIndex={999}>
-                    <Skeleton isLoaded={isLoaded} fadeDuration={0.5}>
-                        <Menu>
-                            <MenuButton py={2} _focus={{ boxShadow: "none" }}>
-                                <HStack>
-                                    <Avatar size={"sm"} src={data?.user?.image ?? ""} />
+                    <Menu>
+                        <MenuButton py={2} _focus={{ boxShadow: "none" }}>
+                            <HStack>
+                                <Avatar size={"sm"} src={data?.user?.image ?? ""} />
+                                <Skeleton isLoaded={isLoaded} fadeDuration={1}>
                                     <VStack display={{ base: "none", md: "flex" }} alignItems="flex-start" spacing="1px" ml="2">
                                         <Text fontSize="sm">{isLoggedIn ? data?.user?.name : "Not signed in"}</Text>
                                         {
@@ -214,23 +215,20 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                                             // </Text>
                                         }
                                     </VStack>
-                                    <Box display={{ base: "none", md: "flex" }}>
-                                        <FiChevronDown />
-                                    </Box>
-                                </HStack>
-                            </MenuButton>
-                            {/* eslint-disable-next-line react-hooks/rules-of-hooks */}
-                            <MenuList bg={useColorModeValue("white", "gray.900")} borderColor={useColorModeValue("gray.200", "gray.700")}>
-                                <MenuItem isDisabled={!isLoggedIn}>Profile</MenuItem>
-                                <MenuItem isDisabled={!isLoggedIn}>Settings</MenuItem>
-                                <MenuItem isDisabled={!isLoggedIn}>Billing</MenuItem>
-                                <MenuDivider />
-                                <MenuItem onClick={() => (isLoggedIn ? signOut() : signIn("discord"))}>
-                                    {isLoggedIn ? "Sign Out" : "Sign In"}
-                                </MenuItem>
-                            </MenuList>
-                        </Menu>
-                    </Skeleton>
+                                </Skeleton>
+                                <Box display={{ base: "none", md: "flex" }}>
+                                    <FiChevronDown />
+                                </Box>
+                            </HStack>
+                        </MenuButton>
+                        <MenuList bg={useColorModeValue("white", "gray.900")} borderColor={useColorModeValue("gray.200", "gray.700")}>
+                            <MenuItem isDisabled={!isLoggedIn}>Profile</MenuItem>
+                            <MenuItem isDisabled={!isLoggedIn}>Settings</MenuItem>
+                            <MenuItem isDisabled={!isLoggedIn}>Billing</MenuItem>
+                            <MenuDivider />
+                            <MenuItem onClick={() => (isLoggedIn ? signOut() : signIn("discord"))}>{isLoggedIn ? "Sign Out" : "Sign In"}</MenuItem>
+                        </MenuList>
+                    </Menu>
                 </Flex>
             </HStack>
         </Flex>
