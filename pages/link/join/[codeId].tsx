@@ -114,7 +114,7 @@ export default function Page(props: props) {
                     <Skeleton isLoaded={codeData ? true : false} hidden={hideSkeleton}>
                         <VStack>
                             <HStack>
-                                <Avatar src={codeData?.sharedBy?.avatar} />
+                                <Avatar src={codeData?.sharedBy.image || ""} />
                                 <Text>{codeData?.sharedBy?.name} has invited you to Match!</Text>
                             </HStack>
                             <Button
