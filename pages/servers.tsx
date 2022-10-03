@@ -55,15 +55,22 @@ export default function Page() {
                 <title>Discord Match</title>
             </Head>
             {/* <main>{JSON.stringify(servers[0])}</main> */}
-            <Wrap>
-                {servers.map((x) => {
-                    return (
-                        <WrapItem key={x.id}>
-                            <ServerCard serverData={x} />
-                        </WrapItem>
-                    )
-                })}
-            </Wrap>
+            <Center>{servers.length > 0 ? (
+                <Wrap alignContent={"center"}>
+                    {servers.map((x) => {
+                        return (
+                            <WrapItem key={x.id}>
+                                <ServerCard serverData={x} />
+                            </WrapItem>
+                        )
+                    })}
+                </Wrap>
+            ) : (
+                <Center>
+                    <CircularProgress isIndeterminate color="green.300" size={"100px"} />
+                </Center>
+            )}
+			</Center>
         </div>
     )
 }

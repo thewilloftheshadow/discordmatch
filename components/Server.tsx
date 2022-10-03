@@ -14,7 +14,7 @@ export default function ServerCard({ serverData }: { serverData: APIGuild }) {
         //     <Image borderRadius="full" boxSize="128px" src={iconUrl} alt="Dan Abramov" />
         //     <Text>{serverData.name}</Text>
         // </Box>
-        <Box maxH="500px" maxW={"200px"} w={"full"} bg={useColorModeValue("white", "gray.700")} color={useColorModeValue("gray.800", "gray.100")} boxShadow={"2xl"} rounded={"lg"} p={6} textAlign={"center"}>
+        <Box maxH="500px" maxW={"200px"} w={"full"} h={"full"} bg={useColorModeValue("white", "gray.700")} color={useColorModeValue("gray.800", "gray.100")} boxShadow={"2xl"} rounded={"lg"} p={6} textAlign={"center"}>
             <Avatar
                 size={"xl"}
                 src={iconUrl}
