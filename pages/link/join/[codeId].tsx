@@ -1,6 +1,7 @@
 import { Alert, AlertIcon, Avatar, Button, Container, HStack, Skeleton, Text, useToast, VStack } from "@chakra-ui/react"
 import { Link, User } from "@prisma/client"
 import { GetServerSideProps } from "next"
+import { signIn } from "next-auth/react"
 import Head from "next/head"
 import NextLink from "next/link"
 import { useRouter } from "next/router"
@@ -31,7 +32,7 @@ export default function Page(props: props) {
             const data = await res.json()
             if (res.status >= 400) {
                 if (res.status === 401) {
-                    router.push("/api/auth/signin/discord?callbackUrl=%2Flink%2Fjoin/" + codeId)
+					signIn("discord", {callbackUrl: "/link/join/"+codeId})
                 } else {
                     const error = data as APIError
                     setError(error.message)
@@ -80,12 +81,14 @@ export default function Page(props: props) {
             <Container>
                 <VStack spacing={3}>
                     {error ? (
-                        <Alert status="error">
+                        <VStack><Alert status="error">
                             <AlertIcon />
                             There was an error processing your request:
                             <br />
                             {error}
                         </Alert>
+						<Button onClick={() => router.push("/link/join")}>Go Back</Button>
+						</VStack>
                     ) : (
                         ""
                     )}

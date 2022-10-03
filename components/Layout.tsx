@@ -23,13 +23,16 @@ import {
     MenuList,
     useColorMode,
     Button,
-    textDecoration,
+    Skeleton,
+    SkeletonCircle,
 } from "@chakra-ui/react"
-import { FiHome, FiLink, FiCompass, FiStar, FiSettings, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
+import { FiHome, FiLink, FiCompass, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
 import { IconType } from "react-icons"
 import { ReactText } from "react"
 import { useSession, signIn, signOut } from "next-auth/react"
 import NextLink from "next/link"
+import { Session } from "next-auth"
+import { useRouter } from "next/router"
 
 interface LinkItemProps {
     name: string
@@ -45,7 +48,6 @@ const LinkItems: Array<LinkItemProps> = [
 ]
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const { data: session } = useSession()
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
         <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
@@ -145,7 +147,28 @@ interface MobileProps extends FlexProps {
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     const { colorMode, toggleColorMode } = useColorMode()
-    const { data: session } = useSession()
+    const session = useSession()
+    const data: Session | null = session?.data
+    let isLoggedIn = false
+    let isLoaded = false
+
+    switch (session.status) {
+        case "loading":
+            isLoaded = false
+            isLoggedIn = false
+            break
+
+        case "authenticated":
+            isLoggedIn = true
+            isLoaded = true
+            break
+
+        case "unauthenticated":
+            isLoggedIn = false
+            isLoaded = true
+            break
+    }
+
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -165,19 +188,27 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             </Text>
 
             <HStack spacing={{ base: "0", md: "6" }}>
-                <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
-                <IconButton size="lg" variant="ghost" aria-label="open menu" icon={colorMode === "light" ? <FiMoon /> : <FiSun />} />
-                <Flex alignItems={"center"}>
-                    {session?.user ? (
+                {/* <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} /> */}
+                <IconButton
+                    onClick={() => toggleColorMode()}
+                    size="lg"
+                    variant="ghost"
+                    aria-label="open menu"
+                    icon={colorMode === "light" ? <FiMoon /> : <FiSun />}
+                />
+                <Flex alignItems={"center"} zIndex={999}>
+                    <Skeleton isLoaded={isLoaded} fadeDuration={0.5}>
                         <Menu>
-                            <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: "none" }}>
+                            <MenuButton py={2} _focus={{ boxShadow: "none" }}>
                                 <HStack>
-                                    <Avatar size={"sm"} src={session.user.image ?? ""} />
+                                    <Avatar size={"sm"} src={data?.user?.image ?? ""} />
                                     <VStack display={{ base: "none", md: "flex" }} alignItems="flex-start" spacing="1px" ml="2">
-                                        <Text fontSize="sm">{session.user.name}</Text>
-                                        <Text fontSize="xs" color="gray.600">
-                                            Admin
-                                        </Text>
+                                        <Text fontSize="sm">{isLoggedIn ? data?.user?.name : "Not signed in"}</Text>
+                                        {
+                                            // <Text fontSize="xs" color="gray.600">
+                                            //     Admin
+                                            // </Text>
+                                        }
                                     </VStack>
                                     <Box display={{ base: "none", md: "flex" }}>
                                         <FiChevronDown />
@@ -186,16 +217,16 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                             </MenuButton>
                             {/* eslint-disable-next-line react-hooks/rules-of-hooks */}
                             <MenuList bg={useColorModeValue("white", "gray.900")} borderColor={useColorModeValue("gray.200", "gray.700")}>
-                                <MenuItem>Profile</MenuItem>
-                                <MenuItem>Settings</MenuItem>
-                                <MenuItem>Billing</MenuItem>
+                                <MenuItem isDisabled={!isLoggedIn}>Profile</MenuItem>
+                                <MenuItem isDisabled={!isLoggedIn}>Settings</MenuItem>
+                                <MenuItem isDisabled={!isLoggedIn}>Billing</MenuItem>
                                 <MenuDivider />
-                                <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+                                <MenuItem onClick={() => (isLoggedIn ? signOut() : signIn("discord"))}>
+                                    {isLoggedIn ? "Sign Out" : "Sign In"}
+                                </MenuItem>
                             </MenuList>
                         </Menu>
-                    ) : (
-                        <Button onClick={() => signIn("discord")}>Sign in</Button>
-                    )}
+                    </Skeleton>
                 </Flex>
             </HStack>
         </Flex>
