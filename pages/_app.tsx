@@ -23,6 +23,7 @@ const App = ({
                     <meta property="og:description" content="See how well you and your friend match on Discord!" />
                     <meta property="og:type" content="website" />
                     <meta property="og:image" content="https://discordmatch.com/handshake.png" />
+					<link rel="icon" type="image/png" href="/handshake.png"></link>
                 </Head>
                 <Layout>
                     <Component {...pageProps} />
