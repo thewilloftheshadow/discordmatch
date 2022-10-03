@@ -32,7 +32,7 @@ export default function Page(props: props) {
             const data = await res.json()
             if (res.status >= 400) {
                 if (res.status === 401) {
-					signIn("discord", {callbackUrl: "/link/join/"+codeId})
+                    signIn("discord", { callbackUrl: "/link/join/" + codeId })
                 } else {
                     const error = data as APIError
                     setError(error.message)
@@ -76,19 +76,38 @@ export default function Page(props: props) {
     return (
         <div>
             <Head>
-                <title>Discord Match</title>
+                <title>Join {codeData?.sharedBy?.name ?? "me"} on Discord Match</title>
+                <meta name="title" content={`Join ${codeData?.sharedBy?.name ?? "me"} on Discord Match`} />
+                <meta name="og:title" content={`Join ${codeData?.sharedBy?.name ?? "me"} on Discord Match`} />
+                <meta
+                    name="description"
+                    content={
+                        codeData?.sharedBy?.name
+                            ? `${codeData.sharedBy.name} has invited you to match with them on DiscordMatch!`
+                            : "You have been invited to match on DiscordMatch!"
+                    }
+                />
+                <meta
+                    name="og:description"
+                    content={
+                        codeData?.sharedBy?.name
+                            ? `${codeData.sharedBy.name} has invited you to match with them on DiscordMatch!`
+                            : "You have been invited to match on DiscordMatch!"
+                    }
+                />
             </Head>
             <Container>
                 <VStack spacing={3}>
                     {error ? (
-                        <VStack><Alert status="error">
-                            <AlertIcon />
-                            There was an error processing your request:
-                            <br />
-                            {error}
-                        </Alert>
-						<Button onClick={() => router.push("/link/join")}>Go Back</Button>
-						</VStack>
+                        <VStack>
+                            <Alert status="error">
+                                <AlertIcon />
+                                There was an error processing your request:
+                                <br />
+                                {error}
+                            </Alert>
+                            <Button onClick={() => router.push("/link/join")}>Go Back</Button>
+                        </VStack>
                     ) : (
                         ""
                     )}

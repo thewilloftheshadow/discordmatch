@@ -11,6 +11,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<{ code: string 
     if (!userData) return res.status(401).send({ message: "Unauthorized" })
     const user = userData as MatchUser
 
+	const oldCode = await prisma.link.findFirst({
+		where: {
+			sharedBy: {
+				id: user.id
+			},
+			linkedToId: null
+		}
+	})
+
+	if(oldCode) return res.status(200).json({ code: oldCode.code })
+
     const code = await prisma.link.create({
         data: {
             sharedBy: {
