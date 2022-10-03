@@ -26,6 +26,7 @@ import {
     Skeleton,
     SkeletonCircle,
 } from "@chakra-ui/react"
+import { SkipNavLink, SkipNavContent } from '@chakra-ui/skip-nav'
 import { FiHome, FiLink, FiCompass, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
 import { IconType } from "react-icons"
 import { ReactText } from "react"
@@ -50,6 +51,8 @@ const LinkItems: Array<LinkItemProps> = [
 export default function Layout({ children }: { children: ReactNode }) {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return (
+		<>
+		<SkipNavLink />
         <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
             <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
             <Drawer
@@ -67,10 +70,11 @@ export default function Layout({ children }: { children: ReactNode }) {
             </Drawer>
             {/* mobilenav */}
             <MobileNav onOpen={onOpen} />
+			<SkipNavContent />
             <Box ml={{ base: 0, md: 60 }} p="4">
                 {children}
             </Box>
-        </Box>
+        </Box></>
     )
 }
 
