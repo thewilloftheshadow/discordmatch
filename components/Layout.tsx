@@ -27,7 +27,7 @@ import {
     SkeletonCircle,
 } from "@chakra-ui/react"
 import { SkipNavLink, SkipNavContent } from "@chakra-ui/skip-nav"
-import { FiHome, FiLink, FiCompass, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun } from "react-icons/fi"
+import { FiHome, FiLink, FiCompass, FiMenu, FiBell, FiChevronDown, FiMoon, FiSun, FiList } from "react-icons/fi"
 import { IconType } from "react-icons"
 import { ReactText } from "react"
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -43,7 +43,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
     { name: "Home", icon: FiHome, linkTo: "/" },
     { name: "Create a Link", icon: FiLink, linkTo: "/link/new" },
-    { name: "My Matches", icon: FiCompass },
+    { name: "Your Servers", icon: FiList, linkTo: "/servers" },
     // { name: "Favorites", icon: FiStar },
     // { name: "Settings", icon: FiSettings },
 ]
@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
             <SkipNavLink />
-            <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
+            <Box minH="100vh" bg={useColorModeValue("white", "gray.900")}>
                 <SidebarContent onClose={() => onClose} display={{ base: "none", md: "block" }} />
                 <Drawer
                     autoFocus={false}
@@ -71,7 +71,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {/* mobilenav */}
                 <MobileNav onOpen={onOpen} />
                 <SkipNavContent />
-                <Box ml={{ base: 0, md: 60 }} p="4">
+                <Box h="100vh" justifyContent="center" alignItems="center" ml={{ base: 0, md: 60 }} p="4">
                     {children}
                 </Box>
             </Box>
@@ -126,7 +126,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
                 role="group"
                 cursor="pointer"
                 _hover={{
-                    bg: "cyan.400",
+                    bg: useColorModeValue("gray.400", "gray.500"),
                     color: "white",
                 }}
                 {...rest}
@@ -189,7 +189,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
             <IconButton display={{ base: "flex", md: "none" }} onClick={onOpen} variant="outline" aria-label="open menu" icon={<FiMenu />} />
 
             <Text display={{ base: "flex", md: "none" }} fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-                Logo
+                DiscordMatch
             </Text>
 
             <HStack spacing={{ base: "0", md: "6" }}>
@@ -205,7 +205,25 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                     <Menu>
                         <MenuButton py={2} _focus={{ boxShadow: "none" }}>
                             <HStack>
-                                <Avatar size={"sm"} src={data?.user?.image ?? ""} />
+                                <Avatar
+                                    size={"sm"}
+                                    src={data?.user?.image ?? ""}
+                                    _after={
+                                        isLoggedIn
+                                            ? {
+                                                  content: '""',
+                                                  w: 3,
+                                                  h: 3,
+                                                  bg: "green.300",
+                                                  border: "1.5px solid white",
+                                                  rounded: "full",
+                                                  pos: "absolute",
+                                                  bottom: -0.5,
+                                                  right: -0.5,
+                                              }
+                                            : {}
+                                    }
+                                />
                                 <Skeleton isLoaded={isLoaded} fadeDuration={1}>
                                     <VStack display={{ base: "none", md: "flex" }} alignItems="flex-start" spacing="1px" ml="2">
                                         <Text fontSize="sm">{isLoggedIn ? data?.user?.name : "Not signed in"}</Text>

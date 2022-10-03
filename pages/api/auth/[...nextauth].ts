@@ -1,52 +1,32 @@
-import NextAuth, { Account, NextAuthOptions, User } from "next-auth"
+import { PrismaClient, Prisma } from "@prisma/client"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 import prisma from "../../../lib/prisma"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+
 export const authOptions: NextAuthOptions = {
+    adapter: PrismaAdapter(prisma),
     providers: [
         DiscordProvider({
             clientId: process.env.DISCORD_CLIENT_ID!,
             clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+            authorization: {
+                params: {
+                    scope: "identify email guilds guilds.join",
+                },
+            },
         }),
     ],
     callbacks: {
-        async signIn({ user, account, profile, email, credentials }) {
-            //console.log(user, account, profile, email, credentials)
-
-            if (user.email) {
-                prisma.user.upsert({
-                    where: {
-                        id: user.id,
-                    },
-                    update: {},
-                    create: {
-                        id: user.id,
-                        email: user.email,
-						avatar: user.image || "",
-						name: user.name || "",
-                    },
-                })
-            }
-            return true
-        },
         async session({ session, token, user }) {
-            //console.log(session, token, user)
-            const userData = await prisma.user.upsert({
+			console.log(session, token, user)
+            const userData = await prisma.user.findFirst({
                 where: {
-                    id: token.sub,
+                    id: user.id,
                 },
-                update: {},
-                create: {
-                    id: token.sub!,
-                    email: session.user!.email!,
-					avatar: session.user!.image || "",
-					name: session.user!.name || "",
-                },
-				include: {
-					linkedCodes: true,
-					sharedCodes: true
-				}
             })
-            session.userData = userData
+			session.userData = userData
+            console.log(session)
             return session
         },
     },

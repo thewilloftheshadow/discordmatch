@@ -1,4 +1,20 @@
-import { Alert, AlertIcon, Button, Heading, Input, InputGroup, InputRightElement, Skeleton, Text, useToast, VStack } from "@chakra-ui/react"
+import {
+    Alert,
+    AlertIcon,
+    Box,
+    Button,
+    Center,
+    CircularProgress,
+    Heading,
+    Input,
+    InputGroup,
+    InputRightElement,
+    Skeleton,
+    Text,
+    useColorModeValue,
+    useToast,
+    VStack,
+} from "@chakra-ui/react"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import Link from "next/link"
@@ -21,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 export default function Page(props: props) {
-    const [hideSkeleton, setHideSkeleton] = useState<boolean>(false)
+    const [isLoaded, setIsLoaded] = useState<boolean>(false)
     const [codeData, setCodeData] = useState({ code: "" })
     const [error, setError] = useState<string>()
 
@@ -38,16 +54,16 @@ export default function Page(props: props) {
                 } else {
                     const error = (await res.json()) as APIError
                     setError(error.message)
-                    setHideSkeleton(true)
+                    setIsLoaded(true)
                     return
                 }
             } else {
                 if (!data.code) {
                     setError("An unknown error has occured, please try again.")
-                    setHideSkeleton(true)
+                    setIsLoaded(true)
                 }
                 setCodeData({ code: data.code! })
-                setHideSkeleton(true)
+                setIsLoaded(true)
             }
         })
     }, [])
@@ -56,7 +72,7 @@ export default function Page(props: props) {
         navigator.clipboard.writeText(`${props.baseURL}/link/join/${codeData.code}`)
         toast({
             title: "Copied to clipboard",
-            description: "The code has been copied to your clipboard.",
+            description: "The link has been copied to your clipboard.",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -69,34 +85,39 @@ export default function Page(props: props) {
                 <title>Discord Match</title>
             </Head>
             <main>
-                <Skeleton isLoaded={hideSkeleton}>
-                    {error ? (
-                        <VStack>
-                            <Alert status="error">
-                                <AlertIcon />
-                                There was an error processing your request:
-                                <br />
-                                {error}
-                            </Alert>
-                            <Button onClick={() => router.push("/")}>Go Back</Button>
-                        </VStack>
-                    ) : (
-                        ""
-                    )}
+                {/* <Skeleton isLoaded={isLoaded}> */}
+                {error ? (
+                    <VStack>
+                        <Alert status="error">
+                            <AlertIcon />
+                            There was an error processing your request:
+                            <br />
+                            {error}
+                        </Alert>
+                        <Button onClick={() => router.push("/")}>Go Back</Button>
+                    </VStack>
+                ) : (
+                    ""
+                )}
+                {isLoaded ? (
                     <VStack>
                         <Text>Your link has been generated! Use it to share with another person!</Text>
                         <Text>Note: Your link can only be used once!</Text>
 
                         <InputGroup size="md">
-                            <Input pr="5.5rem" value={`${props.baseURL}/link/join/${codeData.code}`} />
+                            <Input pr="5.5rem" readOnly={true} value={`${props.baseURL}/link/join/${codeData.code}`} />
                             <InputRightElement width="5.5rem">
-                                <Button h="2.25rem" size="sm" onClick={() => copyCode()}>
+                                {/* eslint-disable-next-line react-hooks/rules-of-hooks */}
+                                <Button bg={useColorModeValue("gray.50", "gray.800")} h="2.25rem" size="sm" onClick={() => copyCode()}>
                                     Copy Link
                                 </Button>
                             </InputRightElement>
                         </InputGroup>
                     </VStack>
-                </Skeleton>
+                ) : (
+                    <Center><CircularProgress isIndeterminate color="green.300" size={"100px"} /></Center>
+                )}
+                {/* </Skeleton> */}
             </main>
         </div>
     )

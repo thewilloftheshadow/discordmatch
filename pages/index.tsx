@@ -9,10 +9,8 @@ export default function Page() {
             <Head>
                 <title>Discord Match</title>
             </Head>
-            <main>
                 <h1>Coming soon to a web near you</h1>
                 <p>{JSON.stringify(session)}</p>
-            </main>
         </div>
     )
 }
